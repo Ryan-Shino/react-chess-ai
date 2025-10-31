@@ -7,6 +7,7 @@ import './css/App.css'
 export default function App() {
   const [game, setGame] = useState(new Chess());
   const [playedMoves, setplayedMoves] = useState([]);
+  const [difficulty, setDifficulty] = useState();
 
   function onDrop(sourceSquare, targetSquare) {
     console.log("Trying move:", sourceSquare, "->", targetSquare);
@@ -54,8 +55,25 @@ export default function App() {
 
   return (
     <div className="chess-container">
-      <h2>Random moves</h2>
-      <div className="board-and-moves">
+      <h2>Choose your difficulty:</h2>
+      <div className="board-wrapper"> 
+        <div className='button-wrapper'>
+          <button onClick={() => 
+            setDifficulty('random')} 
+            className={difficulty === 'random' ? 'selected' : ''}>Random</button>
+          <button onClick={() => 
+            setDifficulty('easy')} 
+            className={difficulty === 'easy' ? 'selected' : ''}>Easy</button>
+            <button onClick={() => 
+            setDifficulty('medium')} 
+            className={difficulty === 'medium' ? 'selected' : ''}>Medium</button>
+            <button onClick={() => 
+            setDifficulty('hard')} 
+            className={difficulty === 'hard' ? 'selected' : ''}>Hard</button>
+            <button onClick={() => 
+            setDifficulty('extreme')} 
+            className={difficulty === 'extreme' ? 'selected' : ''}>Extreme</button>
+        </div>
         <div className="chess-board-wrapper">
           <Chessboard
             position={game.fen()}

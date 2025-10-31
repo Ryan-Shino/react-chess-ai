@@ -8,10 +8,67 @@
   box-sizing: border-box;
 }
 
-.board-and-moves {
+.board-wrapper {
   display: flex;
   gap: 20px;                     /* space between board and moves list */
   align-items: flex-start;
+}
+
+.button-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.button-wrapper button {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  color: #fff;
+  text-align: center;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -2px -2px 6px rgba(255,255,255,0.1);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+/* Progressive metallic gradient: light → dark → scary */
+.button-wrapper button:nth-child(1) { /* Random / easiest */
+  background: linear-gradient(145deg, #a7abb0, #8c9298); /* light metallic gray */
+}
+.button-wrapper button:nth-child(2) { /* Easy */
+  background: linear-gradient(145deg, #7f8c8d, #606f7b); /* medium metallic gray */
+}
+.button-wrapper button:nth-child(3) { /* Medium */
+  background: linear-gradient(145deg, #5a6268, #3e474d); /* darker metallic gray */
+}
+.button-wrapper button:nth-child(4) { /* Hard */
+  background: linear-gradient(145deg, #3b3b3f, #222428); /* very dark, ominous metallic */
+}
+.button-wrapper button:nth-child(5) { /* Extreme */
+  background: linear-gradient(145deg, #1a1a1c, #131212); /* pitch black, scary and intense */
+}
+
+/* Hover effects */
+.button-wrapper button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 6px 6px 14px rgba(0,0,0,0.7), -3px -3px 8px rgba(255,255,255,0.15);
+}
+
+.button-wrapper button:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -1px -1px 4px rgba(255,255,255,0.1);
+}
+
+.button-wrapper button.selected {
+  box-shadow: 0 0 12px #cccccc; /* glowing highlight */
+  transform: scale(1.05);
 }
 
 /* Inner wrapper that controls board size */
@@ -26,7 +83,7 @@
 
 .chess-container h2 {
   font-family: 'Poppins', sans-serif;
-  color: #4b4848;
+  color: #898484;
 }
 
 .moves-list {
@@ -34,14 +91,14 @@
   overflow-y: auto;             /* scroll if too long */
   width: 200px;                 
   height: auto;
-  background-color: rgb(22, 21, 21);
+  background: linear-gradient(145deg,  #5a6268, #222428);
   border-radius: 4px;
   padding-bottom: 20px;
 }
 
 .moves-list h3 {
   font-family: 'Poppins', sans-serif;
-  color: #504c44fe;
+  color: #9a9893fe;
   margin-top: 10px;
   text-align: center;
 }
