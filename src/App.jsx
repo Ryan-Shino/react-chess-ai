@@ -22,19 +22,116 @@ export default function App() {
     const result = newGame.move(move);
 
     if (result) {
-      console.log("Move successful:", result);
       setGame(new Chess(newGame.fen()));
 
       setplayedMoves((prev) => [...prev, result.san])
 
-      setTimeout(() => makeRandomMove(newGame), 400);
-      // Preventing some infinite loops
+      switch(difficulty) {
+        case "random":
+          setTimeout(() => makeRandomMove(newGame), 400);
+          // Preventing some infinite loops
+          break;
+        case "easy":
+          makeAIMove(newGame, 1);
+          break;
+        case "medium":
+          makeAIMove(newGame, 2);
+          break;
+        case "hard":
+          makeAIMove(newGame, 3);
+          break;
+        case "extreme":
+          makeAIMove(newGame, 4);
+          break;
+        default:
+          setTimeout(() => makeRandomMove(newGame), 400);
+      }
       return true;
     } else {
       console.warn("Invalid move:", move);
       return false;
     }
 
+  }
+
+  const makeAIMove = (currentGame, depth) => {
+    // Making a copy we don't mutate the actual game
+    const newGame = new Chess(currentGame.fen());
+    const moves = newGame.moves();
+    console.log(moves);
+
+    if (moves.length === 0) return;
+
+    // Set game logic here
+    // We have all moves now we should put them in a tree and evaluate them using a heuristic function
+
+    // We will use minimax for first couple difficulties and increase difficulty with depth
+    // It is efficient to use the negamax variation here since chess is a zero sum game
+
+    let bestScore = -Infinity;
+    let bestMove = null;
+
+    moves.forEach(move => {
+      // A copy of the game state for each move
+      const gameCopy = new Chess(newGame.fen());
+      gameCopy.move(move);
+
+      let score = NegaMax(gameCopy, depth - 1)
+
+
+      if (score > bestScore){
+        bestScore = score;
+        bestMove = move;
+      }
+    });
+
+    console.log(bestMove);
+    console.log(bestScore);
+    const result = newGame.move(bestMove);
+
+    if (result) {
+      setGame(new Chess(newGame.fen()));
+
+      setplayedMoves((prev) => [...prev, result.san])
+    }
+  };
+
+  const NegaMax = (currentGame, depth) => {
+    if (depth == 0 || currentGame.isGameOver()){
+      return boardEvaluation(currentGame)
+    }
+
+    let max = -Infinity;
+    const moves = currentGame.moves();
+    let score = 0;
+
+    for (const move of moves) {
+      const nextGame = new Chess(currentGame.fen());
+      nextGame.move(move);
+
+      score = -NegaMax(nextGame, depth - 1);
+      max = Math.max(max, score);
+    }
+
+  return max;
+  }
+
+  const boardEvaluation = (currentGame) => {
+    let currentBoard = currentGame.board();
+    let evalScore = 0;
+    
+    const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+
+    for (const row of currentBoard) {
+      for (const piece of row) {
+        if (piece) {
+          const value = pieceValues[piece.type];
+          evalScore += piece.color === 'w' ? value : -value;
+        }
+      }
+    }
+  console.log("Current evaluation score:", evalScore);
+  return evalScore;
   }
 
   const makeRandomMove = (currentGame) => {
