@@ -9,16 +9,18 @@ export default function App() {
   const [playedMoves, setplayedMoves] = useState([]);
   const [difficulty, setDifficulty] = useState();
 
-  function onDrop(sourceSquare, targetSquare) {
+  function onDrop(sourceSquare, targetSquare, promotion = "q") {
     console.log("Trying move:", sourceSquare, "->", targetSquare);
+    
+    const newGame = new Chess(game.fen());
+
+    promotion = promotion[1].toLowerCase();
 
     const move = {
       from: sourceSquare,
       to: targetSquare,
-      promotion: 'q', 
+      promotion: promotion, 
     };
-
-    const newGame = new Chess(game.fen());
     const result = newGame.move(move);
 
     if (result) {
@@ -61,9 +63,6 @@ export default function App() {
     console.log(moves);
 
     if (moves.length === 0) return;
-
-    // Set game logic here
-    // We have all moves now we should put them in a tree and evaluate them using a heuristic function
 
     // We will use minimax for first couple difficulties and increase difficulty with depth
     // It is efficient to use the negamax variation here since chess is a zero sum game
@@ -177,6 +176,9 @@ export default function App() {
             onPieceDrop={onDrop}
             arePiecesDraggable={true}
             boardOrientation="white"
+            onPromotionHandler={(move, promotion) => {
+              onDrop(move.from, move.to, promotion);
+            }}
           />
         </div>
         <div className="moves-list">
