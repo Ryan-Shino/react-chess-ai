@@ -75,8 +75,9 @@ export default function App() {
       const gameCopy = new Chess(newGame.fen());
       gameCopy.move(move);
 
-      let score = NegaMax(gameCopy, depth - 1)
+      let score = AlphaBetaNegaMax(gameCopy, depth - 1)
 
+      console.log("Move:", move, "Score:", score);
 
       if (score > bestScore){
         bestScore = score;
@@ -95,7 +96,7 @@ export default function App() {
     }
   };
 
-  const NegaMax = (currentGame, depth) => {
+  const AlphaBetaNegaMax = (currentGame, depth, alpha = -Infinity, beta = Infinity) => {
     if (depth == 0 || currentGame.isGameOver()){
       return boardEvaluation(currentGame)
     }
@@ -108,30 +109,99 @@ export default function App() {
       const nextGame = new Chess(currentGame.fen());
       nextGame.move(move);
 
-      score = -NegaMax(nextGame, depth - 1);
+    // Negate the score because of the opponent
+      score = -AlphaBetaNegaMax(nextGame, depth - 1, -beta, -alpha);
       max = Math.max(max, score);
+
+      alpha = Math.max(alpha, score);
+
+      // Alpha-beta pruning
+      if (alpha >= beta) {
+        break;
+      }
     }
 
   return max;
   }
 
-  const boardEvaluation = (currentGame) => {
-    let currentBoard = currentGame.board();
-    let evalScore = 0;
-    
-    const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+function boardEvaluation(currentGame) {
+  const board = currentGame.board();
 
-    for (const row of currentBoard) {
-      for (const piece of row) {
-        if (piece) {
-          const value = pieceValues[piece.type];
-          evalScore += piece.color === 'w' ? value : -value;
+  let whiteScore = 0;
+  let blackScore = 0;
+
+  // Piece values
+  const values = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 0 };
+  const centerSquares = new Set(["d4", "e4", "d5", "e5"]);
+  const files = ['a','b','c','d','e','f','g','h'];
+
+  // Scan board once
+  for (let r = 0; r < 8; r++) {
+    for (let f = 0; f < 8; f++) {
+      const piece = board[r][f];
+      if (!piece) continue;
+
+      const color = piece.color;
+      const sign = color === 'w' ? 1 : -1;
+
+      // Base material value
+      let val = values[piece.type];
+
+      // Simple positional tweaks
+      if (piece.type === 'p') {
+        // Encourage pawn chains
+        const dir = color === 'w' ? 1 : -1;
+        const left = board[r - dir]?.[f - 1];
+        const right = board[r - dir]?.[f + 1];
+        if ((left && left.type === 'p' && left.color === color) ||
+            (right && right.type === 'p' && right.color === color)) {
+          val += 10;
+        }
+      } 
+      else if (piece.type === 'r') {
+        // Reward rooks on open files
+        let hasPawn = false;
+        for (let rr = 0; rr < 8; rr++) {
+          if (board[rr][f]?.type === 'p') { hasPawn = true; break; }
+        }
+        if (!hasPawn) val += 15;
+      } 
+      else if (piece.type === 'n' || piece.type === 'b' || piece.type === 'q') {
+        // Encourage piece activity (mobility)
+        val += 2 * pieceMobilityBonus(currentGame, color);
+      } 
+      else if (piece.type === 'k') {
+        // Reward having pawns in front of king
+        const row = color === 'w' ? 6 : 1;
+        for (const df of [-1, 0, 1]) {
+          const pawn = board[row]?.[f + df];
+          if (pawn?.type === 'p' && pawn.color === color) val += 10;
         }
       }
+
+      // Control of centre
+      const square = files[f] + (8 - r);
+      if (centerSquares.has(square)) val += 10;
+
+      // Apply score
+      if (color === 'w') whiteScore += val;
+      else blackScore += val;
     }
-  console.log("Current evaluation score:", evalScore);
-  return evalScore;
   }
+
+  // Add simple mobility measure (cheap)
+  whiteScore += 0.5 * currentGame.moves({ verbose: true }).filter(m => m.color === 'w').length;
+  blackScore += 0.5 * currentGame.moves({ verbose: true }).filter(m => m.color === 'b').length;
+
+  return whiteScore - blackScore;
+}
+
+// Light mobility bonus — much cheaper than per-piece scanning
+function pieceMobilityBonus(game, color) {
+  const moves = game.moves({ verbose: true });
+  return moves.filter(m => m.color === color).length / 10; // small scaling
+}
+  
 
   const makeRandomMove = (currentGame) => {
     const newGame = new Chess(currentGame.fen());
