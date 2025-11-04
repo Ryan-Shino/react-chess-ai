@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
-import { boardEvaluation } from './components/evaluation';
-import { getOpeningMove } from './components/openings';
+import { makeAIMove } from './components/search.js'
 import './css/App.css'
 
 
@@ -15,37 +14,35 @@ export default function App() {
     console.log("Trying move:", sourceSquare, "->", targetSquare);
     
     const newGame = new Chess(game.fen());
-
+  
     promotion = promotion[1].toLowerCase();
-
+  
     const move = {
       from: sourceSquare,
       to: targetSquare,
       promotion: promotion, 
     };
     const result = newGame.move(move);
-
+  
     if (result) {
       setGame(new Chess(newGame.fen()));
-
       setplayedMoves((prev) => [...prev, result.san])
-
+  
       switch(difficulty) {
         case "random":
           setTimeout(() => makeRandomMove(newGame), 400);
-          // Preventing some infinite loops
           break;
         case "easy":
-          makeAIMove(newGame, 1);
+          playAIMove(newGame, 1);
           break;
         case "medium":
-          makeAIMove(newGame, 2);
+          playAIMove(newGame, 2);
           break;
         case "hard":
-          makeAIMove(newGame, 3);
+          playAIMove(newGame, 3);
           break;
         case "extreme":
-          makeAIMove(newGame, 4);
+          playAIMove(newGame, 4);
           break;
         default:
           setTimeout(() => makeRandomMove(newGame), 400);
@@ -55,97 +52,19 @@ export default function App() {
       console.warn("Invalid move:", move);
       return false;
     }
-
   }
-
-  const makeAIMove = (currentGame, depth) => {
-    const newGame = new Chess(currentGame.fen());
-    const moves = newGame.moves();
   
-    if (moves.length === 0) return;
-  
-    // --- Try to use opening book first ---
-    const openingMove = getOpeningMove(currentGame.fen());
-    if (openingMove && Math.random() > 0.1) {
-      const result = currentGame.move(openingMove);
-      if (result) {
-        console.log("AI played opening move:", openingMove);
-        setGame(new Chess(currentGame.fen()));
-        setplayedMoves((prev) => [...prev, result.san]);
-      }
-      return; // Exit after playing opening move
-    }
-  
-    // --- Otherwise, run alpha-beta search ---
-    let bestScore = -Infinity;
-    let bestMove = null;
-  
-    for (const move of moves) {
-      const gameCopy = new Chess(newGame.fen());
-      gameCopy.move(move);
-      console.log(move)
-  
-      const score = -AlphaBetaNegaMax(gameCopy, depth - 1);
-      
-      console.log("Move",move,":",score)
-      if (score > bestScore) {
-        bestScore = score;
-        bestMove = move;
-      }
-      console.log("Bestmove",bestMove,":",score)
-    }
-  
-    // --- Make the best move found ---
+  function playAIMove(gameState, depth) {
+    const bestMove = makeAIMove(gameState, depth);
     if (bestMove) {
-      const result = newGame.move(bestMove);
-      if (result) {
-        setGame(new Chess(newGame.fen()));
-        setplayedMoves((prev) => [...prev, result.san]);
+      const aiGame = new Chess(gameState.fen());
+      const aiResult = aiGame.move(bestMove);
+      if (aiResult) {
+        setGame(new Chess(aiGame.fen()));
+        setplayedMoves((prev) => [...prev, aiResult.san]);
       }
     }
-  };
-  
-  
-  // =============================
-  // Alpha-Beta Negamax with Opening Reward
-  // =============================
-  const AlphaBetaNegaMax = (currentGame, depth, alpha = -Infinity, beta = Infinity) => {
-    if (depth === 0 || currentGame.isGameOver()) {
-      return boardEvaluation(currentGame);
-    }
-  
-    let max = -Infinity;
-    const moves = currentGame.moves();
-  
-    for (const move of moves) {
-      const nextGame = new Chess(currentGame.fen());
-      nextGame.move(move);
-  
-      // --- Check if this move matches opening theory ---
-      const moveCount = currentGame.history().length;
-      const isOpeningPhase = moveCount < 10;
-      const bookMove = getOpeningMove(currentGame.fen());
-  
-      // Compare the book move string to this move's SAN notation
-      const moveSAN = move; // in chess.js .moves() returns SAN strings
-      const isBookMove = isOpeningPhase && bookMove === moveSAN;
-  
-      // --- Recursively evaluate ---
-      let score = -AlphaBetaNegaMax(nextGame, depth - 1, -beta, -alpha);
-  
-      // --- Apply bonus for staying in theory ---
-      if (isBookMove) {
-        score += 200;
-      }
-  
-      max = Math.max(max, score);
-      alpha = Math.max(alpha, score);
-      if (alpha >= beta) break;
-    }
-  
-    return max;
-  };
-  
+  }
 
   const makeRandomMove = (currentGame) => {
     const newGame = new Chess(currentGame.fen());
