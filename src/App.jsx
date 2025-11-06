@@ -65,15 +65,37 @@ export default function App() {
       <h2>Choose your difficulty:</h2>
       <div className="board-wrapper"> 
         <div className='button-wrapper'>
-          <button onClick={() => 
-            setDifficulty('easy')} 
+          <button onClick={() => {
+                const newGame = new Chess();
+                setGame(newGame);
+                setplayedMoves([]);
+                setDifficulty('easy')
+              }}
             className={difficulty === 'easy' ? 'selected' : ''}>Easy</button>
-            <button onClick={() => 
-            setDifficulty('medium')} 
+          <button onClick={() => {
+                const newGame = new Chess();
+                setGame(newGame);
+                setplayedMoves([]);
+                setDifficulty('medium')
+              }} 
             className={difficulty === 'medium' ? 'selected' : ''}>Medium</button>
-            <button onClick={() => 
-            setDifficulty('hard')} 
+          <button onClick={() => {
+                const newGame = new Chess();
+                setGame(newGame);
+                setplayedMoves([]);
+                setDifficulty('hard')
+              }} 
             className={difficulty === 'hard' ? 'selected' : ''}>Hard</button>
+          <button
+            className="reset-button"
+              onClick={() => {
+                const newGame = new Chess();
+                setGame(newGame);
+                setplayedMoves([]); 
+              }}
+            >
+            Reset
+          </button>
         </div>
         <div className="chess-board-wrapper">
           <Chessboard
