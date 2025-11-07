@@ -6,6 +6,14 @@
   width: 100vw;              /* full width of viewport */
   height: 100vh;             /* full height of viewport */
   box-sizing: border-box;
+
+  background-image: url('../images/cloudy-background.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat; 
+  background-position: center;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: darken;
 }
 
 .board-wrapper {
