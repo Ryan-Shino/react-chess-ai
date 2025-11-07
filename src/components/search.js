@@ -8,18 +8,14 @@ const getPieceValue = (piece) => {
   return values[piece] || 0;
 };
 
-// Fast move sorting WITHOUT creating new game instances
 const sortMoves = (moves, game, depth) => {
   return moves.sort((a, b) => {
     let scoreA = 0, scoreB = 0;
 
-    // Captures first (most likely to cause cutoffs)
     if (a.capture) scoreA += 10000 + getPieceValue(a.captured) * 100;
     if (b.capture) scoreB += 10000 + getPieceValue(b.captured) * 100;
 
-    // Only check for checks at shallow depths (expensive)
     if (depth > 2 && scoreA === scoreB) {
-      // Checks are less likely to be best moves at deep levels
       scoreA += 200;
       scoreB += 200;
     }
@@ -36,7 +32,6 @@ export function makeAIMove(currentGame, depth) {
 
   if (moves.length === 0) return null;
 
-  // Try opening book first (10% chance to deviate for variety)
   const openingMove = getOpeningMove(currentGame.fen());
   if (openingMove && Math.random() > 0.1) {
     console.timeEnd("search");
@@ -46,7 +41,6 @@ export function makeAIMove(currentGame, depth) {
   let bestScore = -Infinity;
   let bestMove = null;
 
-  // Sort moves ONCE at root
   const sortedMoves = sortMoves(moves, currentGame, depth);
 
   for (const move of sortedMoves) {
@@ -57,7 +51,7 @@ export function makeAIMove(currentGame, depth) {
       gameCopy,
       depth - 1,
       -Infinity,
-      -bestScore  // Use best score so far for better pruning
+      -bestScore  
     );
 
     if (score > bestScore) {
@@ -78,13 +72,11 @@ const AlphaBetaNegaMax = (
 ) => {
   const fen = currentGame.fen();
 
-  // Transposition table lookup
   const ttLookup = lookupPosition(fen, depth);
   if (ttLookup !== null) {
     return ttLookup;
   }
 
-  // Terminal node evaluation
   if (depth === 0 || currentGame.isGameOver()) {
     const score = boardEvaluation(currentGame);
     storePosition(fen, depth, score, 'exact');
@@ -98,7 +90,6 @@ const AlphaBetaNegaMax = (
     return score;
   }
 
-  // Sort moves for better pruning
   const sortedMoves = sortMoves(moves, currentGame, depth);
 
   let max = -Infinity;
@@ -108,10 +99,8 @@ const AlphaBetaNegaMax = (
     const nextGame = new Chess(currentGame.fen());
     nextGame.move(move);
 
-    // Check if in opening book (only during opening phase)
     let score = -AlphaBetaNegaMax(nextGame, depth - 1, -beta, -alpha);
 
-    // Apply opening book bonus at root level only (depth passed in)
     if (depth > 1) {
       const moveCount = currentGame.history().length;
       if (moveCount < 10) {
@@ -129,7 +118,6 @@ const AlphaBetaNegaMax = (
       alpha = max;
     }
 
-    // Beta cutoff
     if (alpha >= beta) {
       flag = 'lower';
       break;

@@ -14,7 +14,6 @@ export function lookupPosition(fen, depth) {
   
   if (!entry) return null;
   
-  // Only use entry if we searched at least as deep before
   if (entry.depth >= depth) {
     console.log("TT HIT");
     return entry.score;

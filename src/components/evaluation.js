@@ -20,7 +20,6 @@ export function boardEvaluation(game) {
 
   const pieceAttackMap = {};
 
-  // Count attacks on each square
   for (const move of movesVerbose) {
     if (move.to) {
       pieceAttackMap[move.to] = pieceAttackMap[move.to] || { w: 0, b: 0 };
@@ -28,11 +27,9 @@ export function boardEvaluation(game) {
     }
   }
 
-  // Calculate total material
   let whiteMaterial = 0;
   let blackMaterial = 0;
 
-  // Evaluate pieces
   for (let r = 0; r < 8; r++) {
     for (let f = 0; f < 8; f++) {
       const piece = board[r][f];
@@ -45,37 +42,34 @@ export function boardEvaluation(game) {
       if (color === 'w') whiteMaterial += VALUE[piece.type];
       else blackMaterial += VALUE[piece.type];
 
-      // ======== PIECE SECURITY & CAPTURING FREE PIECES ========
+
       const attackers = color === 'w' ? (pieceAttackMap[sq]?.b || 0) : (pieceAttackMap[sq]?.w || 0);
       const defenders = color === 'w' ? (pieceAttackMap[sq]?.w || 0) : (pieceAttackMap[sq]?.b || 0);
 
-      // LARGE BONUS for free pieces (undefended and attackable)
       if (attackers > 0 && defenders === 0 && piece.type !== 'k') {
         const freePieceBonus = attackers * VALUE[piece.type] * 0.8;
-        val += freePieceBonus; // Strong incentive to capture
+        val += freePieceBonus; 
       } 
-      // Heavy penalty for undefended pieces that can be captured
       else if (attackers > defenders && piece.type !== 'k') {
         const undefendedPenalty = (attackers - defenders) * VALUE[piece.type] * 0.5;
         val -= undefendedPenalty;
       }
 
-      // Reward defended pieces
       if (defenders > 0 && piece.type !== 'k') {
         val += defenders * 15;
       }
 
-      // ======== CENTRE CONTROL ========
+      // CENTRE CONTROL
       if (CENTRE_SQUARES.has(sq)) {
         val += 30;
       }
 
-      // ======== PIECE ACTIVITY ========
+      // PIECE ACTIVITY
       const pieceMoveCount = movesVerbose.filter(m => m.from === sq).length;
       if (piece.type !== 'k' && pieceMoveCount === 0) {
         val -= 20;
       } else if (piece.type !== 'p') {
-        // Heavily penalize early queen moves (opening phase)
+
         if (piece.type === 'q' && moveCount < 10) {
           val -= pieceMoveCount * 5; // Queen out early is bad
         } else {
@@ -88,7 +82,7 @@ export function boardEvaluation(game) {
     }
   }
 
-  // ======== MIDDLEGAME TRADE INCENTIVE ========
+  // MIDDLEGAME TRADE INCENTIVE
   const isMiddlegame = moveCount >= 20 && moveCount < 40;
   const materialDifference = Math.abs(whiteMaterial - blackMaterial);
   
@@ -101,7 +95,7 @@ export function boardEvaluation(game) {
     }
   }
 
-  // ======== OPENING BOOK BONUS ========
+  // OPENING BOOK BONUS 
   const isOpeningPhase = moveCount < 20;
   if (isOpeningPhase && openingBook[game.fen()]) {
     // Large bonus for following theory in opening
@@ -112,15 +106,13 @@ export function boardEvaluation(game) {
     }
   }
 
-  // ======== ENDGAME STRENGTHENING ========
+  // ENDGAME STRENGTHENING 
   const isEndgame = moveCount >= 40;
   if (isEndgame) {
-    // Bonus for passed pawns increases dramatically in endgame
     whiteScore += evaluateEndgamePawns(board, 'w', true);
     blackScore += evaluateEndgamePawns(board, 'b', true);
   
   } else {
-    // Regular pawn structure evaluation in opening/middlegame
     whiteScore += evaluatePawnStructure(board, 'w');
     blackScore += evaluatePawnStructure(board, 'b');
   }
@@ -137,19 +129,19 @@ function evaluatePawnStructure(board, color) {
       const piece = board[r][f];
       if (!piece || piece.type !== 'p' || piece.color !== color) continue;
 
-      // ======== PASSED PAWNS ========
+      // PASSED PAWNS 
       if (isPassedPawn(board, r, f, isWhite)) {
         const distanceToPromotion = isWhite ? (7 - r) : r;
         score += (7 - distanceToPromotion) * 50;
       }
 
-      // ======== DOUBLED/TRIPLED PAWNS ========
+      // DOUBLED/TRIPLED PAWNS 
       const doubledCount = countDoubledPawns(board, f, isWhite);
       if (doubledCount > 0) {
         score -= doubledCount * 30;
       }
 
-      // ======== ISOLATED PAWNS ========
+      // ISOLATED PAWNS 
       if (isIsolatedPawn(board, f, isWhite)) {
         score -= 20;
       }
