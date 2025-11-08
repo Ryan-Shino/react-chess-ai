@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
-import '../css/multiplayer.css';
+import '../css/Multiplayer.css';
 
-export default function LocalMultiplayer() {
+export default function Multiplayer() {
   const [game, setGame] = useState(new Chess());
   const [playedMoves, setplayedMoves] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState('white');
@@ -65,7 +65,7 @@ export default function LocalMultiplayer() {
     <div className="chess-container">
       <h2>Local 2-Player Chess</h2>
       <p className="current-player">
-        Current Player: <strong>{currentPlayer === 'white' ? '⚪ White' : '⚫ Black'}</strong>
+        Current Player: <strong>{currentPlayer === 'white' ? 'White' : 'Black'}</strong>
       </p>
 
       {showPassDevice && (
@@ -73,7 +73,7 @@ export default function LocalMultiplayer() {
           <div className="pass-device-modal">
             <h2>Pass Device</h2>
             <p className="pass-device-text">
-              {currentPlayer === 'white' ? '⚫ Black' : '⚪ White'}'s Turn
+              {currentPlayer === 'white' ? 'Black' : 'White'}'s Turn
             </p>
             <p className="pass-device-instruction">
               Hand the device to the other player
