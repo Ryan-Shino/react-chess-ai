@@ -18,7 +18,7 @@
 
 .board-wrapper {
   display: flex;
-  gap: 20px;                     /* space between board and moves list */
+  gap: 20px;         
   align-items: flex-start;
 }
 
@@ -46,21 +46,14 @@
   backdrop-filter: blur(4px);
 }
 
-/* Progressive metallic gradient: light → dark → scary */
-.button-wrapper button:nth-child(1) { /* Random / easiest */
-  background: linear-gradient(145deg, #a7abb0, #8c9298); /* light metallic gray */
+.button-wrapper button:nth-child(1) { 
+  background: linear-gradient(145deg, #5a6268, #3e474d); 
 }
-.button-wrapper button:nth-child(2) { /* Easy */
-  background: linear-gradient(145deg, #7f8c8d, #606f7b); /* medium metallic gray */
+.button-wrapper button:nth-child(2) { 
+  background: linear-gradient(145deg, #3b3b3f, #222428); 
 }
-.button-wrapper button:nth-child(3) { /* Medium */
-  background: linear-gradient(145deg, #5a6268, #3e474d); /* darker metallic gray */
-}
-.button-wrapper button:nth-child(4) { /* Hard */
-  background: linear-gradient(145deg, #3b3b3f, #222428); /* very dark, ominous metallic */
-}
-.button-wrapper button:nth-child(5) { /* Extreme */
-  background: linear-gradient(145deg, #1a1a1c, #131212); /* pitch black, scary and intense */
+.button-wrapper button:nth-child(3) {
+  background: linear-gradient(145deg, #1a1a1c, #131212); 
 }
 
 /* Hover effects */
@@ -79,7 +72,6 @@
   transform: scale(1.05);
 }
 
-/* Inner wrapper that controls board size */
 .chess-board-wrapper {
   width: min(90vh, 750px);
   height: min(90vh, 750px);

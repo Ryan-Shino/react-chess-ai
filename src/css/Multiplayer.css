@@ -1,0 +1,97 @@
+@import '../css/AIGame.css';
+
+.current-player {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.pass-device-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pass-device-modal {
+  background: rgb(40, 34, 34);
+  padding: 50px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  width: 90%;
+}
+
+.pass-device-modal h2 {
+  font-size: 32px;
+  margin: 0 0 20px 0;
+}
+
+.pass-device-text {
+  font-size: 20px;
+  color: #cec5c5;
+  margin: 0 0 30px 0;
+}
+
+.pass-device-instruction {
+  font-size: 16px;
+  color: #999;
+  margin-bottom: 40px;
+}
+
+.pass-device-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  background: linear-gradient(#23102d, #0b0110);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.button-column button {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -2px -2px 6px rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+  }
+  
+  .button-column button:nth-child(1) { 
+    background: linear-gradient(145deg, #5a6268, #3e474d); 
+  }
+  .button-column button:nth-child(2) { 
+    background: linear-gradient(145deg, #3b3b3f, #222428); 
+  }
+  /* Hover effects */
+  .button-column button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.7), -3px -3px 8px rgba(255,255,255,0.15);
+  }
+  
+  .button-column button:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -1px -1px 4px rgba(255,255,255,0.1);
+  }
