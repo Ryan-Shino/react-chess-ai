@@ -1,0 +1,114 @@
+@import '../AIGame.css';
+
+.current-player {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.pass-device-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pass-device-modal {
+  background: white;
+  padding: 50px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  width: 90%;
+}
+
+.pass-device-modal h2 {
+  font-size: 32px;
+  margin: 0 0 20px 0;
+}
+
+.pass-device-text {
+  font-size: 20px;
+  color: #666;
+  margin: 0 0 30px 0;
+}
+
+.pass-device-instruction {
+  font-size: 16px;
+  color: #999;
+  margin-bottom: 40px;
+}
+
+.pass-device-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.p2p-connection-panel {
+  max-width: 500px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.p2p-id-section,
+.p2p-connect-section {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.p2p-id-section h3,
+.p2p-connect-section h3 {
+  margin-top: 0;
+}
+
+.p2p-id-box {
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.p2p-id-text {
+  word-break: break-all;
+  margin: 0 0 10px 0;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.p2p-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.connection-status {
+  text-align: center;
+  color: #4CAF50;
+  font-weight: bold;
+}

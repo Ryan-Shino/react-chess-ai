@@ -8,12 +8,9 @@ export default function LandingPage() {
         <h1>Welcome</h1>
         <p>Choose your opponent</p>
         <div className="link-container">
-            <Link to="/ai" className="ai-link">
-            AI
-            </Link>
-            <Link to="/multiplayer" className="multiplayer-link" >
-            Multiplayer
-            </Link>
+            <Link to="/ai" className="ai-link">AI</Link>
+            <Link to="/multiplayer" className="multiplayer-link"> Local Multiplayer</Link>
+            <Link to="/online-multiplayer" className="online-multiplayer-link"> Online Multiplayer</Link>
         </div>
         </div>
     </div>
