@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
-import '../css/multiplayer.css';
+import '../css/Multiplayer.css';
 
 export default function P2PMultiplayer() {
   const [game, setGame] = useState(new Chess());
