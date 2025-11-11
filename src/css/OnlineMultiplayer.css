@@ -1,114 +1,178 @@
-@import '../AIGame.css';
-
-.current-player {
-  font-size: 18px;
-  margin-top: 10px;
-}
-
-.pass-device-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.pass-device-modal {
-  background: white;
-  padding: 50px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  max-width: 500px;
-  width: 90%;
-}
-
-.pass-device-modal h2 {
-  font-size: 32px;
-  margin: 0 0 20px 0;
-}
-
-.pass-device-text {
-  font-size: 20px;
-  color: #666;
-  margin: 0 0 30px 0;
-}
-
-.pass-device-instruction {
-  font-size: 16px;
-  color: #999;
-  margin-bottom: 40px;
-}
-
-.pass-device-button {
-  width: 100%;
-  padding: 15px;
-  font-size: 18px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.button-column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+@import '../css/AIGame.css';
 
 .p2p-connection-panel {
-  max-width: 500px;
-  margin: 30px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  animation: fadeIn 0.5s ease-out;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .p2p-connection-panel {
+    grid-template-columns: 1fr;
+  }
 }
 
 .p2p-id-section,
 .p2p-connect-section {
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(126, 34, 206, 0.15) 100%);
+  border: 2px solid rgba(168, 85, 247, 0.4);
+  border-radius: 16px;
+  padding: 28px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(168, 85, 247, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.p2p-id-section::before,
+.p2p-connect-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(168, 85, 247, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .p2p-id-section h3,
 .p2p-connect-section h3 {
-  margin-top: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
 }
 
 .p2p-id-box {
-  background: white;
-  padding: 15px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.p2p-connect-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.p2p-connect-section > button {
+  margin-top: 8px;
 }
 
 .p2p-id-text {
-  word-break: break-all;
-  margin: 0 0 10px 0;
-  font-family: monospace;
-  font-weight: bold;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 12px;
+  background: rgba(168, 85, 247, 0.15);
+  border-radius: 8px;
+  margin: 0;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  text-align: center;
 }
 
 .p2p-input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.3s ease;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  text-align: center;
 }
 
-.connection-status {
+.p2p-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.p2p-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+.reset-button {
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #e8e8e8 0%, #ffffff 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25), 0 0 20px rgba(168, 85, 247, 0.15);
+  position: relative;
+  z-index: 1;
   text-align: center;
-  color: #4CAF50;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reset-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35), 0 0 30px rgba(168, 85, 247, 0.3);
+  background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+}
+
+.reset-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+}
+
+.reset-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.p2p-id-section:hover,
+.p2p-connect-section:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.32) 0%, rgba(126, 34, 206, 0.2) 100%);
+  border-color: rgba(168, 85, 247, 0.55);
+  box-shadow: 0 16px 48px rgba(168, 85, 247, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading state */
+.p2p-id-box p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
 }
