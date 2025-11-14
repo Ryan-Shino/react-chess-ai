@@ -87,7 +87,6 @@ export default function AIgame() {
               }} 
             className={difficulty === 'hard' ? 'selected' : ''}>Hard</button>
           <button
-            className="reset-button"
               onClick={() => {
                 const newGame = new Chess();
                 setGame(newGame);
