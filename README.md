@@ -1,68 +1,101 @@
 # React Chess
 
-A fully-featured chess web app built with **React**, **react-chessboard**, and **chess.js**. Play against an intelligent AI opponent with multiple difficulty levels, complete with opening theory and advanced search algorithms.
+A fully-featured chess web app built with **React**, **react-chessboard**, and **chess.js**. Play against an intelligent AI opponent, enjoy local multiplayer, or challenge friends online using Peer-to-Peer networking — now with an integrated game timer.
 
 ---
 
 ## Features
 
-- **Interactive Chessboard** - Drag-and-drop piece movement with full move validation
-- **Intelligent AI Opponent** - Multiple difficulty modes from Easy to Impossible
-- **Opening Theory** - Comprehensive Sicilian Defense opening book with 25+ positions
-- **Advanced Search Algorithm** - Alpha-Beta pruning with transposition tables
-- **Move History** - Complete game history with algebraic notation
-- **Responsive Design** - Adapts to different screen sizes with optimized board sizing
+- **Interactive Chessboard** – Drag-and-drop movement with full legality checks
+- **Intelligent AI Opponent** – Multiple difficulty modes from Easy to Hard
+- **Local Multiplayer** – Play with a friend on the same device
+- **Peer-to-Peer Online Multiplayer (PeerJS)** – Play online without a server
+- **Game Timer** – Configurable chess clock for all game modes
+- **Opening Theory** – Sicilian Defense opening book with 25+ curated positions
+- **Advanced Search Algorithm** – Alpha-Beta pruning and transposition tables
+- **Move History** – View complete algebraic notation of the game
+- **Responsive UI** – Automatically adjusts board size and layout
+
+---
+
+## Multiplayer Modes
+
+### Local Multiplayer
+
+Play face-to-face on the same device. The board automatically flips and switches turns. Displays a pass and play message.
+
+### Peer-to-Peer Online Multiplayer (PeerJS)
+
+Connect with friends online through PeerJS:
+
+- No dedicated backend required
+- Exchange Peer IDs to connect
+- Real-time synchronized board state
+- Shared game timer visible to both players
+- Handles disconnections
+
+---
+
+## Timer System
+
+The chess clock includes:
+
+- Customisable time controls
+- Automatic countdown per turn
+- Stop when a player disconnects or window loses focus
+- Automatic timeout detection to determine the game result
 
 ---
 
 ## AI Engine
 
-### Difficulty Modes
+### Difficulty Levels
 
-- **Easy (Depth 1)** - Sees only immediate moves, nearly instant response
-- **Medium (Depth 2)** - Sees 2 moves ahead, balanced difficulty and speed
-- **Hard (Depth 3)** - Sees 3 moves ahead, challenging opponent
+- **Easy (Depth 1)** – Instant, basic reply
+- **Medium (Depth 2)** – Balanced and moderately strong
+- **Hard (Depth 3)** – Strong amateur-level play
 
 ### Evaluation Features
 
-The AI evaluates positions based on:
+- Material evaluation
+- Undefended pieces and free captures
+- Centre control
+- Piece activity and development
+- Pawn structure (passed, isolated, doubled)
+- Endgame king activity and pawn focus
 
-- **Material Count** - Standard piece values (pawn: 100, knight: 320, bishop: 330, rook: 500, queen: 900)
-- **Piece Security** - Large bonuses for capturing free pieces, penalties for undefended pieces
-- **Centre Control** - Bonuses for controlling key central squares (d4, d5, e4, e5, etc.)
-- **Piece Activity** - Encourages active piece placement while penalizing premature queen development
-- **Pawn Structure** - Evaluates passed pawns, doubled pawns, and isolated pawns
-- **Endgame Strength** - Dramatically increased emphasis on passed pawns and king activity in endgames
+---
 
-### Opening Theory
+## Opening Theory
 
-The AI follows established Sicilian Defense theory including:
+The engine follows established Sicilian Defense theory including:
 
-- **Najdorf Variation** (4...a6)
-- **Classical Line** (4...Nf6)
-- **Taimanov Variation** (4...e6)
+- **Najdorf** (4...a6)
+- **Classical** (4...Nf6)
+- **Taimanov** (4...e6)
 - **Closed Sicilian** (2.c3)
 - **Grand Prix Attack** (2.Nc3 f4)
 
-The opening book contains 25+ positions covering the first 7-8 moves, encouraging theoretical play during the opening phase.
+Over 25 lines covering the first 7–8 moves.
 
-### Search Optimizations
+---
 
-The AI uses multiple optimization techniques for fast, strong play:
+## Search Optimizations
 
-1. **Alpha-Beta Pruning** - Eliminates branches that cannot affect the final decision
-2. **Move Ordering** - Prioritizes captures and checks, allowing better pruning
-3. **Transposition Table** - Caches previously evaluated positions to avoid redundant work
-4. **Opening Book Lookup** - Instantly returns theoretical moves during the opening
-5. **Fast Move Sorting** - Avoids expensive chess.js operations during move evaluation
-6. **Strategic Bonuses** - Encourages favorable trades in the middlegame and king activity in endgames
+- Alpha-Beta Pruning
+- Move Ordering (captures/checks first)
+- Transposition Tables
+- Opening Book Lookup
+- Fast Move Sorting
+- Strategic Evaluation Bonuses
 
-### Performance
+---
 
-- Depth 1 searches complete almost instantly
-- Depth 2 searches typically complete in 1-3 seconds
-- Depth 3 searches complete in 5-15 seconds depending on position complexity
-- All optimizations work together to maximize search depth within reasonable time limits
+## Performance
+
+- **Depth 1:** Instant
+- **Depth 2:** ~1–3 seconds
+- **Depth 3:** ~5–15 seconds (position-dependent)
 
 ---
 
@@ -95,10 +128,11 @@ The app should open in your browser at http://localhost:5173.
 
 ### Playing the Game
 
-1. **Make a Move** - Drag and drop pieces to move them. Only legal moves are accepted.
-2. **Choose Difficulty** - Select your preferred AI difficulty level before or during the game.
-3. **View Move History** - The move history is displayed in algebraic notation beside the board.
-4. **Reset Game** - Start a new game at any time to play again.
+1. **Pick a mode** - AI / Local Multiplayer / Online Multiplayer
+2. **Make a Move** - Drag and drop pieces to move them. Only legal moves are accepted.
+3. **Choose Difficulty** - Select your preferred AI difficulty level before or during the game.
+4. **View Move History** - The move history is displayed in algebraic notation beside the board.
+5. **Reset Game** - Start a new game at any time to play again.
 
 ## Project Structure
 
@@ -110,8 +144,19 @@ src/
 │   ├── openings.js             # Sicilian Defense opening book
 │   └── transpositiontable.js   # Transposition table cache
 ├── css/
-|   ├── App.css
+|   ├── OnlineMultiplayer.css
+|   ├── AIGame.css
+|   ├── landingPage.css
+|   ├── Multiiplayer.css
 │   └── index.css
+├── images/
+|   ├── chessboard.png
+│   └── cloudy-background.png
+├── pages/
+|   ├── AIGame.jsx
+|   ├── Multiplayer.jsx
+|   ├── OnlineMultiplayer.jsx
+│   └── landingPage.jsx
 ├── main.jsx
 └── App.jsx
 ```
@@ -124,6 +169,7 @@ src/
 - **react-chessboard 4** - Chess board component
 - **chess.js 1.4** - Chess logic and validation
 - **CSS Flexbox/Grid** - Responsive layout
+- **PeerJS** - Online multiplayer
 
 ---
 
@@ -132,7 +178,6 @@ src/
 - Quiescence search for more accurate tactical evaluation
 - Killer move heuristic and history heuristic for better move ordering
 - Late move reduction for searching questionable moves to lower depth
-- Iterative deepening with time limits for consistent move speed
 - Extended opening book with more variations
 - Endgame tablebases for perfect endgame play
 
